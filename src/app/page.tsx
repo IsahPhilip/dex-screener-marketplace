@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { useSession } from "next-auth/react";
 
 // Payment icons - crypto and credit card
 const paymentIcons = [
@@ -84,9 +84,12 @@ function GradientDivider() {
 }
 
 function OrderButton() {
+  const { status } = useSession();
+  const href = status === "authenticated" ? "/order" : "/sign-in?callbackUrl=%2Forder";
+
   return (
     <Link
-      href="/order"
+      href={href}
       className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-all rounded-md px-8 h-11 text-md bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-600 hover:to-indigo-600 space-x-2"
     >
       <span>Order Now -</span>
@@ -99,22 +102,26 @@ function OrderButton() {
 
 export default function Home() {
   return (
-    <section className="flex min-h-screen flex-col">
-      {/* Background gradient */}
-      <div className="absolute left-0 top-0 -z-10 h-screen w-full bg-hero-gradient" />
-
+    <section className="flex min-h-screen flex-col bg-hero-gradient">
       {/* Main content */}
       <section className="flex-grow">
         {/* Hero section */}
         <div className="container mx-auto px-4 my-10 flex flex-col items-center">
           <div className="flex flex-col items-center md:w-4/5 lg:w-3/5">
-            <div className="w-full">
-              <Breadcrumbs
-                items={[
-                  { label: "Home", href: "/" },
-                  { label: "Enhanced Token Info" },
-                ]}
-              />
+            <div className="flex w-full justify-center">
+              <div className="mb-4 flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
+                <Link href="/" className="inline-flex items-center gap-1 transition-colors hover:text-white">
+                  <Image
+                    src="https://ext.same-assets.com/3250060909/3504841912.svg"
+                    alt="Home"
+                    width={14}
+                    height={14}
+                  />
+                  <span>Home</span>
+                </Link>
+                <span>/</span>
+                <span className="text-white">Enhanced Token Info</span>
+              </div>
             </div>
 
             {/* Title */}
@@ -133,13 +140,14 @@ export default function Home() {
               <div className="flex flex-col space-y-2 items-center text-center text-xs">
                 <div className="flex flex-row space-x-2 items-center text-2xl">
                   {paymentIcons.map((icon) => (
-                    <Image
-                      key={icon.alt}
-                      src={icon.src}
-                      alt={icon.alt}
-                      width={24}
-                      height={24}
-                    />
+                    <div key={icon.alt} className="rounded-full bg-white p-1">
+                      <Image
+                        src={icon.src}
+                        alt={icon.alt}
+                        width={24}
+                        height={24}
+                      />
+                    </div>
                   ))}
                 </div>
                 <span className="text-muted-foreground">Pay with crypto or credit card</span>

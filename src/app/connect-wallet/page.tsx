@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { parseEther } from "ethers";
 
 type WalletId = "metamask" | "walletconnect" | "coinbase" | "phantom";
 
@@ -62,15 +63,52 @@ export default function ConnectWalletPage() {
   const [connectedAddress, setConnectedAddress] = useState("");
   const [pendingExternalWallet, setPendingExternalWallet] = useState("");
   const [isConnecting, setIsConnecting] = useState<WalletId | "">("");
+  const [isApproving, setIsApproving] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const [showApprovalModal, setShowApprovalModal] = useState(false);
+  const [ethUsdPrice, setEthUsdPrice] = useState<number | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
   const [orderId, setOrderId] = useState("");
   const router = useRouter();
+  const receiverWallet = process.env.NEXT_PUBLIC_ORDER_RECEIVER_WALLET ?? "";
+  const approvalAmountEth = process.env.NEXT_PUBLIC_ORDER_APPROVAL_ETH ?? "0";
+  const orderPriceUsd = Number(process.env.NEXT_PUBLIC_ORDER_PRICE_USD ?? "299");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setOrderId(params.get("orderId") ?? "");
   }, []);
 
-  const redirectToThankYou = (wallet: string, address?: string) => {
+  const fetchEthQuote = async () => {
+    setQuoteLoading(true);
+    try {
+      const response = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
+      );
+      if (!response.ok) {
+        return;
+      }
+      const result = (await response.json()) as { ethereum?: { usd?: number } };
+      const usd = result.ethereum?.usd;
+      if (typeof usd === "number" && usd > 0) {
+        setEthUsdPrice(usd);
+      }
+    } catch {
+      // keep fallback amount from env
+    } finally {
+      setQuoteLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEthQuote();
+  }, []);
+
+  const computedEthAmount =
+    ethUsdPrice && orderPriceUsd > 0 ? (orderPriceUsd / ethUsdPrice).toFixed(6) : null;
+  const payableEthAmount = computedEthAmount ?? approvalAmountEth;
+
+  const redirectToThankYou = (wallet: string, address?: string, hash?: string) => {
     const next = new URLSearchParams();
     if (orderId) {
       next.set("orderId", orderId);
@@ -79,6 +117,10 @@ export default function ConnectWalletPage() {
     next.set("wallet", wallet);
     if (address) {
       next.set("address", address);
+    }
+    if (hash) {
+      next.set("approved", "true");
+      next.set("txHash", hash);
     }
     router.push(`/thank-you?${next.toString()}`);
   };
@@ -97,8 +139,8 @@ export default function ConnectWalletPage() {
     if (accounts?.[0]) {
       setConnectedWallet("MetaMask");
       setConnectedAddress(accounts[0]);
-      setStatusText("Wallet connected successfully.");
-      redirectToThankYou("MetaMask", accounts[0]);
+      setStatusText("Wallet connected. Approve the transaction to complete payment.");
+      setShowApprovalModal(true);
     } else {
       setStatusText("No wallet account returned.");
     }
@@ -124,8 +166,8 @@ export default function ConnectWalletPage() {
       if (pubkey) {
         setConnectedWallet("Phantom");
         setConnectedAddress(pubkey);
-        setStatusText("Wallet connected successfully.");
-        redirectToThankYou("Phantom", pubkey);
+        setStatusText("Wallet connected. Approve the transaction to complete payment.");
+        setShowApprovalModal(true);
         return;
       }
     }
@@ -157,6 +199,55 @@ export default function ConnectWalletPage() {
       setStatusText("Connection failed. Please try again.");
     } finally {
       setIsConnecting("");
+    }
+  };
+
+  const approveOrderTransaction = async () => {
+    if (!receiverWallet.match(/^0x[a-fA-F0-9]{40}$/)) {
+      setStatusText("Order receiver wallet is not configured. Set NEXT_PUBLIC_ORDER_RECEIVER_WALLET.");
+      return;
+    }
+
+    if (!window.ethereum) {
+      setStatusText("No EVM wallet provider found. Install MetaMask or Coinbase Wallet extension.");
+      return;
+    }
+
+    setIsApproving(true);
+    setStatusText("Waiting for wallet approval...");
+    try {
+      let from = connectedAddress;
+      if (!from || !from.startsWith("0x")) {
+        const accounts = (await window.ethereum.request({
+          method: "eth_requestAccounts",
+        })) as string[];
+        from = accounts?.[0] ?? "";
+      }
+
+      if (!from) {
+        setStatusText("No account connected.");
+        return;
+      }
+
+      const valueHex = `0x${parseEther(payableEthAmount).toString(16)}`;
+      const hash = (await window.ethereum.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from,
+            to: receiverWallet,
+            value: valueHex,
+          },
+        ],
+      })) as string;
+
+      setTxHash(hash);
+      setStatusText("Transaction approved and submitted.");
+      redirectToThankYou(connectedWallet || "Wallet", from, hash);
+    } catch {
+      setStatusText("Transaction was rejected or failed. Please try again.");
+    } finally {
+      setIsApproving(false);
     }
   };
 
@@ -216,10 +307,25 @@ export default function ConnectWalletPage() {
           {pendingExternalWallet ? (
             <button
               type="button"
-              onClick={() => redirectToThankYou(pendingExternalWallet)}
+              onClick={() => {
+                setConnectedWallet(pendingExternalWallet);
+                setStatusText(
+                  "Wallet marked as connected. Approve the transaction to complete payment.",
+                );
+                setShowApprovalModal(true);
+              }}
               className="mt-3 inline-flex rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:from-sky-600 hover:to-indigo-600"
             >
               I have connected {pendingExternalWallet}
+            </button>
+          ) : null}
+          {connectedWallet ? (
+            <button
+              type="button"
+              onClick={() => setShowApprovalModal(true)}
+              className="mt-4 inline-flex rounded-md bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-2 text-sm font-semibold text-white transition hover:from-emerald-600 hover:to-teal-600"
+            >
+              Approve transaction for this order
             </button>
           ) : null}
 
@@ -239,6 +345,66 @@ export default function ConnectWalletPage() {
           </div>
         </div>
       </section>
+
+      {showApprovalModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-md rounded-xl border border-white/15 bg-[#0a0d14] p-6 shadow-2xl">
+            <h2 className="font-serif text-2xl font-semibold text-white">
+              Approve transaction
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Approve this order payment in your connected wallet.
+            </p>
+            <p className="mt-4 text-sm text-white">
+              Amount: {payableEthAmount} ETH (~${orderPriceUsd.toFixed(2)})
+            </p>
+            {ethUsdPrice ? (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Rate: 1 ETH = ${ethUsdPrice.toFixed(2)}
+              </p>
+            ) : null}
+            {quoteLoading ? (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Fetching live ETH quote...
+              </p>
+            ) : null}
+            {!ethUsdPrice ? (
+              <p className="mt-1 text-xs text-amber-300">
+                Using fallback ETH amount from env.
+              </p>
+            ) : null}
+            <p className="mt-1 break-all text-xs text-muted-foreground">
+              Receiver: {receiverWallet || "Not configured"}
+            </p>
+            {connectedWallet ? (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Wallet: {connectedWallet}
+              </p>
+            ) : null}
+            {txHash ? (
+              <p className="mt-3 break-all text-xs text-emerald-300">Tx: {txHash}</p>
+            ) : null}
+
+            <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowApprovalModal(false)}
+                className="inline-flex rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={approveOrderTransaction}
+                disabled={isApproving}
+                className="inline-flex rounded-md bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-2 text-sm font-semibold text-white transition hover:from-emerald-600 hover:to-teal-600 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isApproving ? "Approving..." : "Approve transaction"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

@@ -9,6 +9,8 @@ export default async function ThankYouPage({
     walletConnected?: string;
     wallet?: string;
     address?: string;
+    approved?: string;
+    txHash?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -16,6 +18,8 @@ export default async function ThankYouPage({
   const walletConnected = params.walletConnected === "true";
   const wallet = params.wallet;
   const address = params.address;
+  const approved = params.approved === "true";
+  const txHash = params.txHash;
 
   return (
     <main className="min-h-screen bg-hero-gradient px-4 py-14">
@@ -39,6 +43,11 @@ export default async function ThankYouPage({
           <p className="mt-3 text-sm text-emerald-300">
             Wallet connected: {wallet}
             {address ? ` (${address})` : ""}
+          </p>
+        ) : null}
+        {approved ? (
+          <p className="mt-2 text-xs break-all text-emerald-300">
+            Transaction approved{txHash ? ` • ${txHash}` : ""}
           </p>
         ) : null}
         <p className="mt-8 text-white">Please choose a payment method:</p>

@@ -1,10 +1,18 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function SignInPage() {
   const { status } = useSession();
+  const [callbackUrl, setCallbackUrl] = useState("/order");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setCallbackUrl(params.get("callbackUrl") ?? "/order");
+  }, []);
 
   return (
     <main className="min-h-screen bg-hero-gradient px-4 py-16">
@@ -32,7 +40,7 @@ export default function SignInPage() {
 
         <button
           type="button"
-          onClick={() => signIn("google", { callbackUrl: "/order" })}
+          onClick={() => signIn("google", { callbackUrl })}
           className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-md bg-white px-4 py-3 text-base font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={status === "loading"}
         >
@@ -43,6 +51,13 @@ export default function SignInPage() {
           />
           Sign in with Google
         </button>
+
+        <Link
+          href="/"
+          className="mt-4 inline-flex w-full items-center justify-center rounded-md border border-white/15 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-white/10"
+        >
+          Back to Home
+        </Link>
       </section>
     </main>
   );

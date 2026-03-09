@@ -158,7 +158,7 @@ export default function OrderPage() {
       tokenName: String(formData.get("tokenName") ?? ""),
       tokenSymbol: String(formData.get("tokenSymbol") ?? ""),
       description: String(formData.get("description") ?? ""),
-      paymentMethod: String(formData.get("paymentMethod") ?? ""),
+      paymentMethod: "crypto",
       links: links.filter((link) => link.url.trim().length > 0),
       lockedAddresses: lockedAddresses.filter(
         (address) => address.trim().length > 0,
@@ -199,8 +199,8 @@ export default function OrderPage() {
           <Breadcrumbs
             className="mb-0"
             items={[
-              { label: "DEX Screener Marketplace", href: "/" },
-              { label: "Token Advertising", href: "/" },
+              { label: "Home", href: "/" },
+              { label: "Enhanced Token Info", href: "/" },
               { label: "Order" },
             ]}
           />
@@ -255,7 +255,6 @@ export default function OrderPage() {
                 </label>
                 <Input
                   name="tokenAddress"
-                  value="0x0000000000000000000000000000000000000000"
                   placeholder="Token address"
                 />
               </div>
@@ -438,6 +437,7 @@ export default function OrderPage() {
                 Supply Description
               </p>
               <textarea
+                name="supplyDescription"
                 rows={3}
                 className="mt-2 w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-white/30"
                 placeholder="Provide a brief explanation of why and how supply is locked"
@@ -466,25 +466,6 @@ export default function OrderPage() {
                   <p className="text-xl font-semibold text-white">$299.00</p>
                 </div>
               </div>
-            </section>
-
-            <section className="rounded-lg border border-white/10 bg-black/25 p-4">
-              <h2 className="text-lg font-semibold text-white">Payment</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Select your payment method and confirm your order.
-              </p>
-              <label className="mt-4 block text-sm font-semibold text-white">
-                Payment Method
-              </label>
-              <select
-                name="paymentMethod"
-                defaultValue=""
-                className="mt-2 w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-white/30"
-              >
-                <option value="">Choose payment method</option>
-                <option value="crypto">Pay with crypto</option>
-                <option value="card">Pay with card</option>
-              </select>
             </section>
 
             <section className="space-y-3">
