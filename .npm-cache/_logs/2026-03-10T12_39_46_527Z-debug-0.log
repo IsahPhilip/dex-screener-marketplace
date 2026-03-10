@@ -1,0 +1,65 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.6.1
+2 info using node@v24.11.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\hp\Documents\Code\dex-screener-marketplace\.npmrc
+5 silly config load:file:C:\Users\hp\.npmrc
+6 silly config load:file:C:\Users\hp\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--loglevel" "verbose"
+9 verbose logfile logs-max:10 dir:C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_39_46_527Z-
+10 verbose logfile C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_39_46_527Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest ganache@^7.9.2
+15 silly packumentCache full:https://registry.npmjs.org/ganache cache-miss
+16 http fetch GET https://registry.npmjs.org/ganache attempt 1 failed with EACCES
+17 http fetch GET https://registry.npmjs.org/ganache attempt 2 failed with EACCES
+18 http fetch GET https://registry.npmjs.org/ganache attempt 3 failed with EACCES
+19 silly fetch manifest solc@0.8.23
+20 silly packumentCache full:https://registry.npmjs.org/solc cache-miss
+21 http fetch GET https://registry.npmjs.org/solc attempt 1 failed with EACCES
+22 http fetch GET https://registry.npmjs.org/solc attempt 2 failed with EACCES
+23 http fetch GET https://registry.npmjs.org/solc attempt 3 failed with EACCES
+24 silly placeDep ROOT ganache@ OK for: nextjs-tailwind@0.1.0 want: ^7.9.2
+25 silly placeDep ROOT solc@ REPLACE for: nextjs-tailwind@0.1.0 want: 0.8.23
+26 verbose type system
+27 verbose stack FetchError: request to https://registry.npmjs.org/ganache failed, reason: 
+27 verbose stack     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+27 verbose stack     at ClientRequest.emit (node:events:508:28)
+27 verbose stack     at emitErrorEvent (node:_http_client:107:11)
+27 verbose stack     at _destroy (node:_http_client:954:9)
+27 verbose stack     at onSocketNT (node:_http_client:974:5)
+27 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+28 error code EACCES
+29 error errno EACCES
+30 error FetchError: request to https://registry.npmjs.org/ganache failed, reason: 
+30 error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+30 error     at ClientRequest.emit (node:events:508:28)
+30 error     at emitErrorEvent (node:_http_client:107:11)
+30 error     at _destroy (node:_http_client:954:9)
+30 error     at onSocketNT (node:_http_client:974:5)
+30 error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+30 error   code: 'EACCES',
+30 error   errno: 'EACCES',
+30 error   type: 'system',
+30 error   requiredBy: '.'
+30 error }
+31 error
+31 error The operation was rejected by your operating system.
+31 error It's possible that the file was already in use (by a text editor or antivirus),
+31 error or that you lack permissions to access it.
+31 error
+31 error If you believe this might be a permissions issue, please double-check the
+31 error permissions of the file and its containing directories, or try running
+31 error the command again as root/Administrator.
+32 silly unfinished npm timer reify 1773146387572
+33 silly unfinished npm timer reify:loadTrees 1773146387577
+34 verbose cwd C:\Users\hp\Documents\Code\dex-screener-marketplace
+35 verbose os Windows_NT 10.0.26100
+36 verbose node v24.11.0
+37 verbose npm  v11.6.1
+38 verbose exit 1
+39 verbose code 1
+40 error A complete log of this run can be found in: C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_39_46_527Z-debug-0.log

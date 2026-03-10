@@ -1,0 +1,26 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.6.1
+2 info using node@v24.11.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\hp\Documents\Code\dex-screener-marketplace\.npmrc
+5 silly config load:file:C:\Users\hp\.npmrc
+6 silly config load:file:C:\Users\hp\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm explain n
+8 verbose argv "explain" "n"
+9 verbose logfile logs-max:10 dir:C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_38_35_992Z-
+10 verbose logfile C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_38_35_992Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+14 verbose stack Error: No dependencies found matching n
+14 verbose stack     at Explain.exec (C:\Program Files\nodejs\node_modules\npm\lib\commands\explain.js:58:13)
+14 verbose stack     at async Npm.exec (C:\Program Files\nodejs\node_modules\npm\lib\npm.js:208:9)
+14 verbose stack     at async module.exports (C:\Program Files\nodejs\node_modules\npm\lib\cli\entry.js:67:5)
+15 error No dependencies found matching n
+16 verbose cwd C:\Users\hp\Documents\Code\dex-screener-marketplace
+17 verbose os Windows_NT 10.0.26100
+18 verbose node v24.11.0
+19 verbose npm  v11.6.1
+20 verbose exit 1
+21 verbose code 1
+22 error A complete log of this run can be found in: C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_38_35_992Z-debug-0.log

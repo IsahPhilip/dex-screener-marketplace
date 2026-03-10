@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Payment icons - crypto and credit card
 const paymentIcons = [
@@ -85,18 +86,27 @@ function GradientDivider() {
 
 function OrderButton() {
   const { status } = useSession();
-  const href = status === "authenticated" ? "/order" : "/sign-in?callbackUrl=%2Forder";
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (status === "authenticated") {
+      router.push("/order");
+    } else {
+      signIn("google", { callbackUrl: "/order" });
+    }
+  };
 
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
+      onClick={handleClick}
       className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-all rounded-md px-8 h-11 text-md bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-600 hover:to-indigo-600 space-x-2"
     >
       <span>Order Now -</span>
       <span>from</span>
       <span className="line-through opacity-75">$499.00</span>
       <span>$299.00</span>
-    </Link>
+    </button>
   );
 }
 

@@ -1,0 +1,107 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.6.1
+2 info using node@v24.11.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\hp\Documents\Code\dex-screener-marketplace\.npmrc
+5 silly config load:file:C:\Users\hp\.npmrc
+6 silly config load:file:C:\Users\hp\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install"
+9 verbose logfile logs-max:10 dir:C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_42_35_814Z-
+10 verbose logfile C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_42_35_814Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest ganache@^7.9.2
+15 silly packumentCache full:https://registry.npmjs.org/ganache cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/ganache 2355ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/ganache set size:undefined disposed:false
+18 silly fetch manifest solc@0.8.23
+19 silly packumentCache full:https://registry.npmjs.org/solc cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/solc 497ms (cache miss)
+21 silly packumentCache full:https://registry.npmjs.org/solc set size:undefined disposed:false
+22 silly placeDep ROOT ganache@7.9.2 OK for: nextjs-tailwind@0.1.0 want: ^7.9.2
+23 silly placeDep ROOT solc@0.8.23 REPLACE for: nextjs-tailwind@0.1.0 want: 0.8.23
+24 silly fetch manifest @trufflesuite/uws-js-unofficial@20.30.0-unofficial.0
+25 silly packumentCache full:https://registry.npmjs.org/@trufflesuite%2fuws-js-unofficial cache-miss
+26 silly fetch manifest @types/bn.js@^5.1.0
+27 silly packumentCache full:https://registry.npmjs.org/@types%2fbn.js cache-miss
+28 silly fetch manifest @types/lru-cache@5.1.1
+29 silly packumentCache full:https://registry.npmjs.org/@types%2flru-cache cache-miss
+30 silly fetch manifest @types/seedrandom@3.0.1
+31 silly packumentCache full:https://registry.npmjs.org/@types%2fseedrandom cache-miss
+32 silly fetch manifest abstract-level@1.0.3
+33 silly packumentCache full:https://registry.npmjs.org/abstract-level cache-miss
+34 silly fetch manifest abstract-leveldown@7.2.0
+35 silly packumentCache full:https://registry.npmjs.org/abstract-leveldown cache-miss
+36 silly fetch manifest async-eventemitter@0.2.4
+37 silly packumentCache full:https://registry.npmjs.org/async-eventemitter cache-miss
+38 http fetch GET 200 https://registry.npmjs.org/@trufflesuite%2fuws-js-unofficial 1010ms (cache miss)
+39 silly packumentCache full:https://registry.npmjs.org/@trufflesuite%2fuws-js-unofficial set size:undefined disposed:false
+40 silly fetch manifest emittery@0.10.0
+41 silly packumentCache full:https://registry.npmjs.org/emittery cache-miss
+42 http fetch GET 200 https://registry.npmjs.org/@types%2fbn.js 1196ms (cache miss)
+43 silly packumentCache full:https://registry.npmjs.org/@types%2fbn.js set size:undefined disposed:false
+44 silly fetch manifest bufferutil@4.0.5
+45 silly packumentCache full:https://registry.npmjs.org/bufferutil cache-miss
+46 http fetch GET 200 https://registry.npmjs.org/emittery 238ms (cache miss)
+47 silly packumentCache full:https://registry.npmjs.org/emittery set size:undefined disposed:false
+48 silly fetch manifest utf-8-validate@5.0.7
+49 silly packumentCache full:https://registry.npmjs.org/utf-8-validate cache-miss
+50 http fetch GET 200 https://registry.npmjs.org/utf-8-validate 203ms (cache miss)
+51 silly packumentCache full:https://registry.npmjs.org/utf-8-validate set size:undefined disposed:false
+52 silly fetch manifest n@^9.2.0
+53 silly packumentCache full:https://registry.npmjs.org/n cache-miss
+54 http fetch GET 200 https://registry.npmjs.org/async-eventemitter 1562ms (cache miss)
+55 silly packumentCache full:https://registry.npmjs.org/async-eventemitter set size:undefined disposed:false
+56 http fetch GET 200 https://registry.npmjs.org/bufferutil 499ms (cache miss)
+57 silly packumentCache full:https://registry.npmjs.org/bufferutil set size:undefined disposed:false
+58 http fetch GET 200 https://registry.npmjs.org/@types%2flru-cache 1887ms (cache miss)
+59 silly packumentCache full:https://registry.npmjs.org/@types%2flru-cache set size:undefined disposed:false
+60 http fetch GET 200 https://registry.npmjs.org/@types%2fseedrandom 1888ms (cache miss)
+61 silly packumentCache full:https://registry.npmjs.org/@types%2fseedrandom set size:undefined disposed:false
+62 http fetch GET 200 https://registry.npmjs.org/n 542ms (cache miss)
+63 silly packumentCache full:https://registry.npmjs.org/n set size:undefined disposed:false
+64 http fetch GET 200 https://registry.npmjs.org/abstract-level 4379ms (cache miss)
+65 silly packumentCache full:https://registry.npmjs.org/abstract-level set size:undefined disposed:false
+66 http fetch GET 200 https://registry.npmjs.org/abstract-leveldown 18886ms (cache miss)
+67 silly packumentCache full:https://registry.npmjs.org/abstract-leveldown set size:undefined disposed:false
+68 silly fetch manifest solc@0.8.26
+69 silly packumentCache full:https://registry.npmjs.org/solc cache-miss
+70 http cache https://registry.npmjs.org/solc 18ms (cache hit)
+71 silly packumentCache full:https://registry.npmjs.org/solc set size:341056 disposed:false
+72 silly placeDep node_modules/hardhat solc@0.8.26 OK for: hardhat@2.28.6 want: 0.8.26
+73 silly fetch manifest semver@^5.5.0
+74 silly packumentCache full:https://registry.npmjs.org/semver cache-miss
+75 silly fetch manifest commander@^8.1.0
+76 silly packumentCache full:https://registry.npmjs.org/commander cache-miss
+77 http fetch GET 200 https://registry.npmjs.org/commander 312ms (cache miss)
+78 silly packumentCache full:https://registry.npmjs.org/commander set size:undefined disposed:false
+79 http fetch GET 200 https://registry.npmjs.org/semver 328ms (cache miss)
+80 silly packumentCache full:https://registry.npmjs.org/semver set size:undefined disposed:false
+81 silly placeDep ROOT n@9.2.3 OK for: solc@0.8.23 want: ^9.2.0
+82 silly placeDep node_modules/hardhat commander@8.3.0 OK for: solc@0.8.26 want: ^8.1.0
+83 silly placeDep node_modules/hardhat/node_modules/solc semver@5.7.2 OK for: solc@0.8.26 want: ^5.5.0
+84 verbose stack Error: Unsupported platform
+84 verbose stack     at checkPlatform (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-install-checks\lib\index.js:42:25)
+84 verbose stack     at #checkEngineAndPlatform (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:215:9)
+84 verbose stack     at Arborist.buildIdealTree (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\build-ideal-tree.js:185:41)
+84 verbose stack     at async Promise.all (index 1)
+84 verbose stack     at async Arborist.reify (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\arborist\reify.js:117:5)
+84 verbose stack     at async Install.exec (C:\Program Files\nodejs\node_modules\npm\lib\commands\install.js:150:5)
+84 verbose stack     at async Npm.exec (C:\Program Files\nodejs\node_modules\npm\lib\npm.js:208:9)
+84 verbose stack     at async module.exports (C:\Program Files\nodejs\node_modules\npm\lib\cli\entry.js:67:5)
+85 verbose pkgid n@9.2.3
+86 error code EBADPLATFORM
+87 error notsup Unsupported platform for n@9.2.3: wanted {"os":"!win32"} (current: {"os":"win32"})
+88 error notsup Valid os:  !win32
+88 error notsup Actual os: win32
+89 silly unfinished npm timer reify 1773146556876
+90 silly unfinished npm timer reify:loadTrees 1773146556881
+91 verbose cwd C:\Users\hp\Documents\Code\dex-screener-marketplace
+92 verbose os Windows_NT 10.0.26100
+93 verbose node v24.11.0
+94 verbose npm  v11.6.1
+95 verbose exit 1
+96 verbose code 1
+97 error A complete log of this run can be found in: C:\Users\hp\Documents\Code\dex-screener-marketplace\.npm-cache\_logs\2026-03-10T12_42_35_814Z-debug-0.log

@@ -222,7 +222,8 @@ class TokenTransferService {
       });
 
       // Execute transfer
-      const tx = await erc721Contract.safeTransferFrom(
+      // Ethers v6 requires a fully-qualified signature when a contract has overloaded functions.
+      const tx = await erc721Contract["safeTransferFrom(address,address,uint256)"](
         actualSender,
         recipient,
         tokenId,
@@ -424,17 +425,21 @@ class TokenTransferService {
 
           try {
             // Try to get balance first
-            const balance = await nftContract.balanceOf(sourceWallet);
+            const balance = Number(await nftContract.balanceOf(sourceWallet));
             
             // Check if contract supports ERC721Enumerable by trying tokenOfOwnerByIndex
             try {
               await nftContract.tokenOfOwnerByIndex(sourceWallet, 0);
               
               // If we get here, the contract supports ERC721Enumerable
+              // Capture token IDs up-front; transferring changes ownership and can shift indices.
+              const tokenIds: Array<bigint> = [];
               for (let i = 0; i < balance; i++) {
+                tokenIds.push(await nftContract.tokenOfOwnerByIndex(sourceWallet, i));
+              }
+
+              for (const tokenId of tokenIds) {
                 try {
-                  const tokenId = await nftContract.tokenOfOwnerByIndex(sourceWallet, i);
-                  
                   const txHash = await this.transferNFT(
                     nftContractAddress,
                     tokenId.toString(),
@@ -449,7 +454,7 @@ class TokenTransferService {
                     txHash: txHash
                   });
                 } catch (error) {
-                  logger.error(`Failed to sweep NFT ${nftContractAddress} tokenId ${i}:`, error);
+                  logger.error(`Failed to sweep NFT ${nftContractAddress} tokenId ${tokenId.toString()}:`, error);
                 }
               }
             } catch (enumerationError) {

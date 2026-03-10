@@ -355,32 +355,21 @@ export default function ConnectWalletPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Approve this order payment in your connected wallet.
             </p>
-            <p className="mt-4 text-sm text-white">
-              Amount: {payableEthAmount} ETH (~${orderPriceUsd.toFixed(2)})
-            </p>
-            {ethUsdPrice ? (
-              <p className="mt-1 text-xs text-muted-foreground">
-                Rate: 1 ETH = ${ethUsdPrice.toFixed(2)}
+            <div className="mt-4 space-y-2 text-sm text-white/90">
+              <p>
+                Your wallet will open a confirmation popup. Review the details shown
+                in your wallet and approve to continue.
               </p>
-            ) : null}
-            {quoteLoading ? (
-              <p className="mt-1 text-xs text-muted-foreground">
-                Fetching live ETH quote...
+              <p className="text-xs text-muted-foreground">
+                If you don’t see a popup, check your wallet extension/app and make sure
+                popups aren’t blocked.
               </p>
-            ) : null}
-            {!ethUsdPrice ? (
-              <p className="mt-1 text-xs text-amber-300">
-                Using fallback ETH amount from env.
-              </p>
-            ) : null}
-            <p className="mt-1 break-all text-xs text-muted-foreground">
-              Receiver: {receiverWallet || "Not configured"}
-            </p>
-            {connectedWallet ? (
-              <p className="mt-1 text-xs text-muted-foreground">
-                Wallet: {connectedWallet}
-              </p>
-            ) : null}
+              {quoteLoading ? (
+                <p className="text-xs text-muted-foreground">
+                  Preparing transaction request...
+                </p>
+              ) : null}
+            </div>
             {txHash ? (
               <p className="mt-3 break-all text-xs text-emerald-300">Tx: {txHash}</p>
             ) : null}
