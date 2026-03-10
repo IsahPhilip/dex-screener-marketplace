@@ -3,9 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,12 +42,29 @@ export default function SiteHeader() {
               <span className="text-sm text-white/50">Marketplace</span>
             </div>
           </Link>
-          <Link
-            href="/sign-in"
-            className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10"
-          >
-            Sign In
-          </Link>
+          <div className="flex items-center gap-3">
+            {status === "authenticated" ? (
+              <>
+                <span className="inline-flex h-10 items-center rounded-md bg-white/10 px-4 text-sm font-medium text-white">
+                  {session?.user?.name ?? "User"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md border border-white/15 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </header>

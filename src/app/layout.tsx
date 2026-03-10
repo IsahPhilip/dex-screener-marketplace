@@ -23,13 +23,13 @@ export default function RootLayout({
         suppressHydrationWarning
         className="antialiased min-h-screen bg-background text-foreground"
       >
-        <div className="flex min-h-screen flex-col">
-          <SiteHeader />
-          <ClientBody>
+        <ClientBody>
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
             <div className="flex-1">{children}</div>
-          </ClientBody>
-          <SiteFooter />
-        </div>
+            <SiteFooter />
+          </div>
+        </ClientBody>
       </body>
     </html>
   );
