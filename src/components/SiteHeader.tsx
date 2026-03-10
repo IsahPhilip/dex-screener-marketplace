@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -10,16 +12,18 @@ export default function SiteHeader() {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header className={`sticky top-0 z-50 py-4 transition-all duration-300 ${
-      isScrolled 
-        ? 'backdrop-blur-md bg-black/20 border-b border-white/10 shadow-lg' 
-        : 'backdrop-blur-sm bg-transparent'
-    }`}>
+    <header
+      className={`sticky top-0 z-50 py-4 transition-all duration-300 ${
+        isScrolled
+          ? "supports-[backdrop-filter]:bg-white/5 bg-white/5 backdrop-blur-lg backdrop-saturate-150 border-b border-white/10 shadow-lg"
+          : "bg-transparent backdrop-blur-0 border-b border-transparent shadow-none"
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex h-10 flex-row items-center justify-between">
           <Link href="/" className="flex flex-row items-center space-x-2">
