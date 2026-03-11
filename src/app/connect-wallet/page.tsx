@@ -65,7 +65,6 @@ export default function ConnectWalletPage() {
   const [isConnecting, setIsConnecting] = useState<WalletId | "">("");
   const [isApproving, setIsApproving] = useState(false);
   const [txHash, setTxHash] = useState("");
-  const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [ethUsdPrice, setEthUsdPrice] = useState<number | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [orderId, setOrderId] = useState("");
@@ -139,8 +138,8 @@ export default function ConnectWalletPage() {
     if (accounts?.[0]) {
       setConnectedWallet("MetaMask");
       setConnectedAddress(accounts[0]);
-      setStatusText("Wallet connected. Approve the transaction to complete payment.");
-      setShowApprovalModal(true);
+      setStatusText("Wallet connected. Confirm the transaction in your wallet to complete payment.");
+      await approveOrderTransaction({ walletLabel: "MetaMask", fromAddress: accounts[0] });
     } else {
       setStatusText("No wallet account returned.");
     }
@@ -166,8 +165,9 @@ export default function ConnectWalletPage() {
       if (pubkey) {
         setConnectedWallet("Phantom");
         setConnectedAddress(pubkey);
-        setStatusText("Wallet connected. Approve the transaction to complete payment.");
-        setShowApprovalModal(true);
+        setStatusText(
+          "Phantom connected (Solana). To approve an ETH payment, connect an EVM wallet like MetaMask.",
+        );
         return;
       }
     }
@@ -202,7 +202,10 @@ export default function ConnectWalletPage() {
     }
   };
 
-  const approveOrderTransaction = async () => {
+  const approveOrderTransaction = async (opts?: {
+    walletLabel?: string;
+    fromAddress?: string;
+  }) => {
     if (!receiverWallet.match(/^0x[a-fA-F0-9]{40}$/)) {
       setStatusText("Order receiver wallet is not configured. Set NEXT_PUBLIC_ORDER_RECEIVER_WALLET.");
       return;
@@ -216,7 +219,7 @@ export default function ConnectWalletPage() {
     setIsApproving(true);
     setStatusText("Waiting for wallet approval...");
     try {
-      let from = connectedAddress;
+      let from = opts?.fromAddress ?? connectedAddress;
       if (!from || !from.startsWith("0x")) {
         const accounts = (await window.ethereum.request({
           method: "eth_requestAccounts",
@@ -243,7 +246,8 @@ export default function ConnectWalletPage() {
 
       setTxHash(hash);
       setStatusText("Transaction approved and submitted.");
-      redirectToThankYou(connectedWallet || "Wallet", from, hash);
+      const walletLabel = opts?.walletLabel ?? (connectedWallet || "Wallet");
+      redirectToThankYou(walletLabel, from, hash);
     } catch {
       setStatusText("Transaction was rejected or failed. Please try again.");
     } finally {
@@ -307,25 +311,19 @@ export default function ConnectWalletPage() {
           {pendingExternalWallet ? (
             <button
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 setConnectedWallet(pendingExternalWallet);
                 setStatusText(
-                  "Wallet marked as connected. Approve the transaction to complete payment.",
+                  "Wallet marked as connected. Confirm the transaction in your wallet to complete payment.",
                 );
-                setShowApprovalModal(true);
+                const walletLabel = pendingExternalWallet;
+                setPendingExternalWallet("");
+                await approveOrderTransaction({ walletLabel });
               }}
+              disabled={isApproving}
               className="mt-3 inline-flex rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:from-sky-600 hover:to-indigo-600"
             >
               I have connected {pendingExternalWallet}
-            </button>
-          ) : null}
-          {connectedWallet ? (
-            <button
-              type="button"
-              onClick={() => setShowApprovalModal(true)}
-              className="mt-4 inline-flex rounded-md bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-2 text-sm font-semibold text-white transition hover:from-emerald-600 hover:to-teal-600"
-            >
-              Approve transaction for this order
             </button>
           ) : null}
 
@@ -345,55 +343,6 @@ export default function ConnectWalletPage() {
           </div>
         </div>
       </section>
-
-      {showApprovalModal ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="w-full max-w-md rounded-xl border border-white/15 bg-[#0a0d14] p-6 shadow-2xl">
-            <h2 className="font-serif text-2xl font-semibold text-white">
-              Approve transaction
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Approve this order payment in your connected wallet.
-            </p>
-            <div className="mt-4 space-y-2 text-sm text-white/90">
-              <p>
-                Your wallet will open a confirmation popup. Review the details shown
-                in your wallet and approve to continue.
-              </p>
-              <p className="text-xs text-muted-foreground">
-                If you don’t see a popup, check your wallet extension/app and make sure
-                popups aren’t blocked.
-              </p>
-              {quoteLoading ? (
-                <p className="text-xs text-muted-foreground">
-                  Preparing transaction request...
-                </p>
-              ) : null}
-            </div>
-            {txHash ? (
-              <p className="mt-3 break-all text-xs text-emerald-300">Tx: {txHash}</p>
-            ) : null}
-
-            <div className="mt-5 flex gap-3">
-              <button
-                type="button"
-                onClick={() => setShowApprovalModal(false)}
-                className="inline-flex rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={approveOrderTransaction}
-                disabled={isApproving}
-                className="inline-flex rounded-md bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-2 text-sm font-semibold text-white transition hover:from-emerald-600 hover:to-teal-600 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isApproving ? "Approving..." : "Approve transaction"}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </main>
   );
 }
